@@ -1,21 +1,19 @@
 var App = function() {
   var element = document.getElementById('corpo')
-  var geraMensagemErro = '<div class="alert alert-danger" role="alert">'
-   + 'Desculpe, não foi encontrado nenhum resultado para sua pesquisa no wikipedia'
-   + '</div>'
-  
+
   this.getWikiApi = function(pesquisa) {
     var self = this
     var request = new XMLHttpRequest()
 
     request.onload = function() {
       var response = JSON.parse(request.response)
-      self.montaEstrtura(response)
+      self.buildStructure(response)
     }
 
     request.onerror = function() {
-      return console.log('Error na api')
+      return this.generateMessage('Erro na api')
     }
+
     request.open('GET', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + pesquisa + '&origin=*')
     request.send()
   }
@@ -25,51 +23,47 @@ var App = function() {
 
     if (this.varSearch == '') {
       return alert('Por favor, insira alguma pesquisa valida')
-    }else {
+    } else {
       this.getWikiApi(this.varSearch)
     }
   }
 
-  this.montaEstrtura = function(response) {
-    var titulos = response[1]
-    var conteudos = response[2]
+  this.buildStructure = function(response) {
+    var titles = response[1]
+    var contents = response[2]
     var links = response[3] 
     
-    if (titulos.length == 0) {
-      element.insertAdjacentHTML('beforeend', geraMensagemErro)
-    }else {
-      for(var i = 0; i < titulos.length; i++){
-        element.insertAdjacentHTML('beforeend', this.geraEstrutura(titulos[i], conteudos[i], links[i]))
-      }
+    if (titles.length == 0) {
+      return element.insertAdjacentHTML('beforeend', this.generateMessage('Desculpe, não foi encontrado nenhum resultado para a sua pesquisa no wkipedia'))
+    }
+
+    for (var i = 0; i < titles.length; i++) {
+      element.insertAdjacentHTML('beforeend', this.generateStructure(titles[i], contents[i], links[i]))
     }
   }
   
-  this.geraEstrutura = function(title,content, link) {
-    return  '<div class="row"><a class="card pesquisas" href="'+ link +'" target="_blank"><div class="card-body "><h4 class="card-title text-center">' + title + '</h4><p class="card-text">' + content
-    + '</p></div></a></div>' 
+  this.generateStructure = function(title, content, link) {
+    return '<div class="row"><a class="card pesquisas" href="'+ link +'" target="_blank"><div class="card-body ">'
+    + '<h4 class="card-title text-center">' + title + '</h4> ' + (content ? '<p class="card-text">' + content
+    + '</p>' : '') + '</div></a></div>' 
   }
 
   this.clearResults = function() {
     element.innerHTML = ''
   }
+
+  this.generateMessage = function(message) {
+    return '<div class="alert alert-danger" role="alert">' + msg + '</div>'
+  }
 }
 
-document.addEventListener('DOMContentLoaded',function() {
+document.addEventListener('DOMContentLoaded', function() {
   var app = new App()
-  var formElement = document.getElementById('form');
-  var status = 'anterior' 
+  var formElement = document.getElementById('form')
 
   formElement.addEventListener('submit', function(event) {
-    if (status === 'anterior') {
-      app.clearResults()
-      event.preventDefault()
-      app.getSearch()
-      status = 'novo'
-    }else {
-      app.clearResults()
-      event.preventDefault()
-      app.getSearch()
-      status = 'anterior'
-    }
+    event.preventDefault()
+    app.clearResults()
+    app.getSearch()
   })
 })
