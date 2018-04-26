@@ -1,4 +1,4 @@
-var App = function(){
+var App = function() {
   var element = document.getElementById('corpo')
   var geraMensagemErro = '<div class="alert alert-danger" role="alert">'
    + 'Desculpe, não foi encontrado nenhum resultado para sua pesquisa no wikipedia'
@@ -12,9 +12,9 @@ var App = function(){
       var response = JSON.parse(request.response)
       self.montaEstrtura(response)
     }
-    
+
     request.onerror = function() {
-      return console.log('Não foi encontrado nenhuma resposta referente a busca')
+      return console.log('Error na api')
     }
     request.open('GET', 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=' + pesquisa + '&origin=*')
     request.send()
@@ -25,9 +25,8 @@ var App = function(){
 
     if (this.varSearch == '') {
       return alert('Por favor, insira alguma pesquisa valida')
-    } else {
-
-    this.getWikiApi(this.varSearch)
+    }else {
+      this.getWikiApi(this.varSearch)
     }
   }
 
@@ -38,9 +37,9 @@ var App = function(){
     
     if (titulos.length == 0) {
       element.insertAdjacentHTML('beforeend', geraMensagemErro)
-    } else {
-      for (var i = 0; i < titulos.length; i++) {
-       element.insertAdjacentHTML('beforeend', this.geraEstrutura(titulos[i], conteudos[i], links[i]))
+    }else {
+      for(var i = 0; i < titulos.length; i++){
+        element.insertAdjacentHTML('beforeend', this.geraEstrutura(titulos[i], conteudos[i], links[i]))
       }
     }
   }
@@ -60,18 +59,17 @@ document.addEventListener('DOMContentLoaded',function() {
   var formElement = document.getElementById('form');
   var status = 'anterior' 
 
-  formElement.addEventListener('submit', function(event){
-
+  formElement.addEventListener('submit', function(event) {
     if (status === 'anterior') {
       app.clearResults()
       event.preventDefault()
       app.getSearch()
       status = 'novo'
-    } else {
+    }else {
       app.clearResults()
       event.preventDefault()
       app.getSearch()
-      status = 'anterior'  
+      status = 'anterior'
     }
   })
 })

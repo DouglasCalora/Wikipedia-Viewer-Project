@@ -1,14 +1,13 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
-body{
+body {
   font-family: 'Roboto', sans-serif;
+  background: rgba(144, 65, 248, 0.918);
 }
 .search {
-  color: #28a745;
-  background: rgba(144, 65, 248, 0.918);
+  color: rgba(144, 65, 248, 0.918);
   width: 500px !important;
   max-width: 100%;
-
 }
 .form-inline {
   display: inline-block;
@@ -16,8 +15,19 @@ body{
   width: 100%;
   margin-top: 100px;
   margin-bottom: 100px; 
-  
 }
 .pesquisas {
   width: 100%; 
+  margin: 10px 0px;
+  background: white;
+}
+a {
+  color: rgba(144, 65, 248, 0.918);
+}
+a:hover {
+  color: rgba(144, 65, 248, 0.918);
+}
+.btn{
+  background: white;
+  color:  rgba(144, 65, 248, 0.918);;
 }
